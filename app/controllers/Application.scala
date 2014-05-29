@@ -4,6 +4,9 @@ import play.api.mvc._
 import org.squeryl.PrimitiveTypeMode._
 import database.{MyDB, User}
 import scala.util.Random
+import play.api.db.DB
+import play.api.Play
+import com.jolbox.bonecp.BoneCPDataSource
 
 object Application extends Controller {
 
@@ -16,6 +19,8 @@ object Application extends Controller {
   }
 
   def users = Action {
+    seePoolInfo
+
     val users = inTransaction {
       MyDB.users.where(u => true === true).toList
     }
@@ -29,6 +34,18 @@ object Application extends Controller {
       MyDB.users.insert(user)
     }
     Ok("created user: " + name)
+  }
+
+  def seePoolInfo {
+    val dataSource = DB.getDataSource()(Play.current).asInstanceOf[BoneCPDataSource]
+    val pool = dataSource.getPool
+    val statistics = pool.getStatistics
+    println("=====================================")
+    println("Total leased: " + dataSource.getTotalLeased)
+    println("getTotalCreatedConnections: " + statistics.getTotalCreatedConnections)
+    println("getConnectionsRequested: " + statistics.getConnectionsRequested)
+    println("getTotalFree: " + statistics.getTotalFree)
+    println("=====================================")
   }
 
 }
