@@ -2,7 +2,7 @@ package controllers
 
 import play.api.mvc._
 import org.squeryl.PrimitiveTypeMode._
-import database.{DB, User}
+import database.{MyDB, User}
 import scala.util.Random
 
 object Application extends Controller {
@@ -17,7 +17,7 @@ object Application extends Controller {
 
   def users = Action {
     val users = inTransaction {
-      DB.users.where(u => true === true).toList
+      MyDB.users.where(u => true === true).toList
     }
     Ok(users.toString())
   }
@@ -26,7 +26,7 @@ object Application extends Controller {
     val name = "Freewind@" + System.currentTimeMillis()
     inTransaction {
       val user = new User(name, Random.nextInt())
-      DB.users.insert(user)
+      MyDB.users.insert(user)
     }
     Ok("created user: " + name)
   }
