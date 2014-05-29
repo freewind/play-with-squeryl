@@ -1,0 +1,7 @@
+Demo: Playframework 2 + squeryl
+===============================
+
+1. `git clone` this project
+2. `cd play-with-squeryl`
+3. `play run`
+4. visit `http://localhost:9000`
